@@ -3272,3 +3272,41 @@ a {
     display: none !important;
   }
 }
+.article-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.article-title {
+  font-size: 54px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.article-date {
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.article-image {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin: 40px 0;
+}
+
+.article-content {
+  font-size: 20px;
+  line-height: 1.9;
+}
+
+.article-content h2 {
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+.article-content p {
+  margin-bottom: 20px;
+}
