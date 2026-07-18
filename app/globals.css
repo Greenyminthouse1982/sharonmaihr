@@ -3261,3 +3261,14 @@ a {
     line-height: 1.5;
   }
 }
+
+/* ==========================================
+   Mobile: Hide Popular Searches
+========================================== */
+@media (max-width: 760px) {
+  .popular-searches,
+  .search-popular,
+  .search-section__popular {
+    display: none !important;
+  }
+}

@@ -90,27 +90,31 @@ export default function FeaturedArticles() {
                 </div>
 
                 <div className="knowledge-card__articles">
-                  {categoryArticles.map((article) => (
-                    <Link
-                      className="knowledge-article"
-                      href={categoryHref}
-                      key={article.slug}
-                      aria-label={`Open ${category.title}: ${article.title}`}
-                    >
-                      <Image
-                        src={article.image}
-                        alt={article.title}
-                        width={92}
-                        height={50}
-                        className="knowledge-article__image"
-                      />
+                  {categoryArticles.map((article) => {
+                    const articleHref = `/${category.slug}/${article.slug}`;
 
-                      <span className="knowledge-article__content">
-                        <strong>{article.title}</strong>
-                        <small>{article.date}</small>
-                      </span>
-                    </Link>
-                  ))}
+                    return (
+                      <Link
+                        className="knowledge-article"
+                        href={articleHref}
+                        key={article.slug}
+                        aria-label={`Open article: ${article.title}`}
+                      >
+                        <Image
+                          src={article.image}
+                          alt={article.title}
+                          width={92}
+                          height={50}
+                          className="knowledge-article__image"
+                        />
+
+                        <span className="knowledge-article__content">
+                          <strong>{article.title}</strong>
+                          <small>{article.date}</small>
+                        </span>
+                      </Link>
+                    );
+                  })}
                 </div>
               </article>
             );
