@@ -11,18 +11,24 @@ export default function Hero() {
           <h1 className="home-hero__title">SharonMaiHR</h1>
 
           <p className="home-hero__subtitle">
-            HR Knowledge. Labor Laws. Market Perspectives.
+            HR Knowledge. Labor Laws.
+            <br className="home-hero__mobile-break" />
+            Market Perspectives.
           </p>
 
           <p className="home-hero__description">
-            Practical insights and actionable strategies in HR management
-            <br />
-            to create value and drive business growth.
+            Practical insights and actionable strategies
+            <br className="home-hero__desktop-break" />
+            in HR managementto create value and
+            <br className="home-hero__desktop-break" />
+            drive business growth.
           </p>
 
           <Link href="#featured-articles" className="home-hero__button">
-            Explore Articles
-            <span aria-hidden="true">→</span>
+            <span>Explore Articles</span>
+            <span className="home-hero__button-arrow" aria-hidden="true">
+              →
+            </span>
           </Link>
         </div>
 

@@ -28,6 +28,19 @@ export default function Header() {
     return pathname === href || pathname.startsWith(`${href}/`);
   }
 
+  function scrollToSearch() {
+    const searchInput = document.querySelector<HTMLInputElement>(
+      ".search-input"
+    );
+
+    searchInput?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+
+    window.setTimeout(() => searchInput?.focus(), 450);
+  }
+
   return (
     <header className="site-header">
       <div className="site-container header-inner">
@@ -65,7 +78,8 @@ export default function Header() {
           <button
             type="button"
             className="header-icon-button"
-            aria-label="Search"
+            aria-label="Go to article search"
+            onClick={scrollToSearch}
           >
             <svg
               viewBox="0 0 24 24"

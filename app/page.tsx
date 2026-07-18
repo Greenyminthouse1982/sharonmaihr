@@ -4,24 +4,21 @@ import SearchBar from "@/components/SearchBar";
 import FeaturedArticles from "@/components/FeaturedArticles";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
+import "./home-mobile.css";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <>
-  <Header />
+      <Header />
 
-  <main className="min-h-screen bg-white">
-    <Hero />
-    <SearchBar />
+      <main>
+        <Hero />
+        <SearchBar />
+        <FeaturedArticles />
+        <Features />
+      </main>
 
-    <section id="featured-articles">
-      <FeaturedArticles />
-    </section>
-
-    <Features />
-  </main>
-
-  <Footer />
-  </>
+      <Footer />
+    </>
   );
 }
