@@ -4,7 +4,6 @@ import SearchBar from "@/components/SearchBar";
 import FeaturedArticles from "@/components/FeaturedArticles";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
-import "./home-mobile.css";
 
 export default function HomePage() {
   return (
