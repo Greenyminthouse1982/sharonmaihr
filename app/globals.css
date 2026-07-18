@@ -988,15 +988,19 @@ a {
 
 @media (max-width: 760px) {
   .site-footer {
-    background-position: right top;
-    background-size: auto 100%;
+    background-position: center top;
+    background-size: cover;
   }
 
   .site-footer__main {
+    display: grid;
     grid-template-columns: 1fr;
     min-height: auto;
-    gap: 16px;
-    padding: 24px 16px 94px;
+    gap: 14px;
+
+    /* Giảm khoảng xanh dư phía dưới */
+    padding: 24px 16px 24px;
+
     text-align: center;
   }
 
@@ -1011,9 +1015,13 @@ a {
   }
 
   .site-footer__bottom {
+    display: flex;
     justify-content: center;
-    min-height: 34px;
-    padding-inline: 16px;
+    align-items: center;
+
+    min-height: 40px;
+    padding: 10px 16px;
+
     text-align: center;
   }
 }

@@ -39,7 +39,7 @@ export default function Footer() {
       </div>
       
       <div className="site-container site-footer__bottom">
-        <span>© 2024 SharonMaiHR. All rights reserved.</span>
+        <span>© 2026 SharonMaiHR. All rights reserved.</span>
       </div>
     </footer>
   );
