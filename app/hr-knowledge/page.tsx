@@ -4,14 +4,45 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SearchBar from "@/components/SearchBar";
 import { categories } from "@/data/categories";
-import { getArticlesByCategory } from "@/data/articles";
+import { client } from "@/sanity/lib/client";
 
-export default function HRKnowledgePage() {
+type Article = {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  publishedAt?: string;
+  image?: string;
+};
+
+const HR_ARTICLES_QUERY = `
+  *[
+    _type == "article" &&
+    category == "hr-knowledge"
+  ] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    publishedAt,
+    "image": image.asset->url
+  }
+`;
+
+export default async function HRKnowledgePage() {
   const category = categories.find(
     (item) => item.slug === "hr-knowledge"
   );
 
-  const hrArticles = getArticlesByCategory("hr-knowledge");
+  const hrArticles = await client.fetch<Article[]>(
+    HR_ARTICLES_QUERY,
+    {},
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
 
   if (!category) {
     return null;
@@ -78,78 +109,57 @@ export default function HRKnowledgePage() {
             </div>
 
             <div className="hr-article-list">
-              {hrArticles.map((article) => (
-                <article
-                  className="hr-article-row"
-                  key={article.slug}
-                >
-                  <Link
-                    href={`/hr-knowledge/${article.slug}`}
-                    className="hr-article-row__image-link"
+              {hrArticles.length > 0 ? (
+                hrArticles.map((article) => (
+                  <article
+                    className="hr-article-row"
+                    key={article._id}
                   >
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      width={220}
-                      height={124}
-                      className="hr-article-row__image"
-                    />
-                  </Link>
+                    <Link
+                      href={`/hr-knowledge/${article.slug}`}
+                      className="hr-article-row__image-link"
+                    >
+                      <Image
+                        src={article.image || "/hero-hr-team.png"}
+                        alt={article.title}
+                        width={220}
+                        height={124}
+                        className="hr-article-row__image"
+                      />
+                    </Link>
 
-                  <div className="hr-article-row__content">
-                    <h2>
-                      <Link
-                        href={`/hr-knowledge/${article.slug}`}
+                    <div className="hr-article-row__content">
+                      <h2>
+                        <Link
+                          href={`/hr-knowledge/${article.slug}`}
+                        >
+                          {article.title}
+                        </Link>
+                      </h2>
+
+                      <p>{article.description}</p>
+                    </div>
+
+                    {article.publishedAt && (
+                      <time
+                        className="hr-article-row__date"
+                        dateTime={article.publishedAt}
                       >
-                        {article.title}
-                      </Link>
-                    </h2>
-
-                    <p>{article.excerpt}</p>
-                  </div>
-
-                  <time className="hr-article-row__date">
-                    {article.date}
-                  </time>
-                </article>
-              ))}
+                        {new Date(
+                          article.publishedAt
+                        ).toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </time>
+                    )}
+                  </article>
+                ))
+              ) : (
+                <p>No articles published yet.</p>
+              )}
             </div>
-
-            <nav
-              className="hr-pagination"
-              aria-label="Article pages"
-            >
-              <button
-                type="button"
-                className="hr-pagination__arrow"
-                aria-label="Previous page"
-                disabled
-              >
-                ‹
-              </button>
-
-              <button
-                type="button"
-                className="is-active"
-              >
-                1
-              </button>
-
-              <button type="button">2</button>
-              <button type="button">3</button>
-
-              <span aria-hidden="true">…</span>
-
-              <button type="button">10</button>
-
-              <button
-                type="button"
-                className="hr-pagination__arrow"
-                aria-label="Next page"
-              >
-                ›
-              </button>
-            </nav>
           </div>
         </section>
       </main>
