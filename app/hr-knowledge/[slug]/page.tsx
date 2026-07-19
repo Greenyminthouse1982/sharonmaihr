@@ -5,6 +5,7 @@ import { PortableText } from "@portabletext/react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { client } from "@/sanity/lib/client";
+import "./article.css";
 
 type Article = {
   title: string;
@@ -56,26 +57,17 @@ export default async function ArticlePage({ params }: PageProps) {
 
       <main className="article-page">
         <article className="article-container">
-          <Link
-            href="/hr-knowledge"
-            className="article-back-link"
-          >
+          <Link href="/hr-knowledge" className="article-back-link">
             ← Back to HR Knowledge
           </Link>
 
           <header className="article-header">
-            <p className="article-category">
-              HR Knowledge
-            </p>
+            <p className="article-category">HR Knowledge</p>
 
-            <h1 className="article-title">
-              {article.title}
-            </h1>
+            <h1 className="article-title">{article.title}</h1>
 
             {article.description && (
-              <p className="article-description">
-                {article.description}
-              </p>
+              <p className="article-description">{article.description}</p>
             )}
 
             {article.publishedAt && (
@@ -83,9 +75,7 @@ export default async function ArticlePage({ params }: PageProps) {
                 className="article-date"
                 dateTime={article.publishedAt}
               >
-                {new Date(
-                  article.publishedAt
-                ).toLocaleDateString("en-US", {
+                {new Date(article.publishedAt).toLocaleDateString("en-US", {
                   month: "long",
                   day: "numeric",
                   year: "numeric",
@@ -109,9 +99,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
           {article.body && (
             <div className="article-content">
-              <PortableText
-                value={article.body as never}
-              />
+              <PortableText value={article.body as never} />
             </div>
           )}
         </article>
@@ -120,150 +108,4 @@ export default async function ArticlePage({ params }: PageProps) {
       <Footer />
     </>
   );
-}
-.article-page {
-  background: #ffffff;
-}
-
-.article-container {
-  width: min(100% - 40px, 960px);
-  margin: 0 auto;
-  padding: 56px 0 80px;
-}
-
-.article-back-link {
-  display: inline-block;
-  margin-bottom: 32px;
-  color: #0b2d6b;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.article-back-link:hover {
-  text-decoration: underline;
-}
-
-.article-header {
-  max-width: 820px;
-  margin-bottom: 36px;
-}
-
-.article-category {
-  margin: 0 0 14px;
-  color: #d98700;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.article-title {
-  margin: 0;
-  color: #08265f;
-  font-size: clamp(40px, 6vw, 68px);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.03em;
-}
-
-.article-description {
-  max-width: 760px;
-  margin: 24px 0 0;
-  color: #42526b;
-  font-size: 20px;
-  line-height: 1.65;
-}
-
-.article-date {
-  display: block;
-  margin-top: 18px;
-  color: #6b7280;
-  font-size: 15px;
-}
-
-.article-image-wrapper {
-  margin: 42px 0 48px;
-}
-
-.article-image {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 18px;
-  box-shadow: 0 18px 48px rgba(8, 38, 95, 0.12);
-}
-
-.article-content {
-  max-width: 780px;
-  color: #24324a;
-  font-size: 19px;
-  line-height: 1.85;
-}
-
-.article-content h2 {
-  margin: 52px 0 18px;
-  color: #08265f;
-  font-size: 34px;
-  line-height: 1.25;
-}
-
-.article-content h3 {
-  margin: 38px 0 14px;
-  color: #08265f;
-  font-size: 26px;
-  line-height: 1.3;
-}
-
-.article-content p {
-  margin: 0 0 22px;
-}
-
-.article-content ul,
-.article-content ol {
-  margin: 0 0 24px;
-  padding-left: 28px;
-}
-
-.article-content li {
-  margin-bottom: 10px;
-}
-
-.article-content blockquote {
-  margin: 36px 0;
-  padding: 20px 24px;
-  border-left: 4px solid #d98700;
-  background: #f7f9fc;
-  color: #334155;
-  font-style: italic;
-}
-
-.article-content img {
-  width: 100%;
-  height: auto;
-  margin: 32px 0;
-  border-radius: 14px;
-}
-
-@media (max-width: 768px) {
-  .article-container {
-    width: min(100% - 28px, 960px);
-    padding: 36px 0 56px;
-  }
-
-  .article-title {
-    font-size: 40px;
-  }
-
-  .article-description {
-    font-size: 18px;
-  }
-
-  .article-content {
-    font-size: 17px;
-  }
-
-  .article-content h2 {
-    font-size: 28px;
-  }
 }
