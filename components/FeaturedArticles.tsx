@@ -1,8 +1,37 @@
 import Image from "next/image";
 import Link from "next/link";
+
 import { categories } from "@/data/categories";
-import { getArticlesByCategory } from "@/data/articles";
 import type { CategoryIcon } from "@/data/categories";
+import { client } from "@/sanity/lib/client";
+
+type SanityArticle = {
+  _id: string;
+  title: string;
+  slug: string;
+  category: string;
+  publishedAt?: string;
+  image?: string;
+};
+
+const FEATURED_ARTICLES_QUERY = `
+  *[
+    _type == "article" &&
+    defined(slug.current) &&
+    category in [
+      "hr-knowledge",
+      "labor-laws",
+      "market-perspectives"
+    ]
+  ] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    category,
+    publishedAt,
+    "image": image.asset->url
+  }
+`;
 
 function CategoryIconGraphic({ type }: { type: CategoryIcon }) {
   if (type === "book") {
@@ -34,7 +63,35 @@ function CategoryIconGraphic({ type }: { type: CategoryIcon }) {
   );
 }
 
-export default function FeaturedArticles() {
+function formatArticleDate(publishedAt?: string) {
+  if (!publishedAt) {
+    return "";
+  }
+
+  const date = new Date(publishedAt);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+export default async function FeaturedArticles() {
+  const articles = await client.fetch<SanityArticle[]>(
+    FEATURED_ARTICLES_QUERY,
+    {},
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
+
   return (
     <section
       id="featured-articles"
@@ -44,9 +101,11 @@ export default function FeaturedArticles() {
       <div className="site-container">
         <div className="knowledge-grid">
           {categories.map((category) => {
-            const categoryArticles = getArticlesByCategory(
-              category.slug
-            ).slice(0, 3);
+            const categoryArticles = articles
+              .filter(
+                (article) => article.category === category.slug
+              )
+              .slice(0, 3);
 
             const categoryHref = `/${category.slug}`;
 
@@ -90,31 +149,48 @@ export default function FeaturedArticles() {
                 </div>
 
                 <div className="knowledge-card__articles">
-                  {categoryArticles.map((article) => {
-                    const articleHref = `/${category.slug}/${article.slug}`;
+                  {categoryArticles.length > 0 ? (
+                    categoryArticles.map((article) => {
+                      const articleHref =
+                        `/${category.slug}/${article.slug}`;
 
-                    return (
-                      <Link
-                        className="knowledge-article"
-                        href={articleHref}
-                        key={article.slug}
-                        aria-label={`Open article: ${article.title}`}
-                      >
-                        <Image
-                          src={article.image}
-                          alt={article.title}
-                          width={92}
-                          height={50}
-                          className="knowledge-article__image"
-                        />
+                      return (
+                        <Link
+                          className="knowledge-article"
+                          href={articleHref}
+                          key={article._id}
+                          aria-label={`Open article: ${article.title}`}
+                        >
+                          <Image
+                            src={
+                              article.image ||
+                              "/hero-hr-team.png"
+                            }
+                            alt={article.title}
+                            width={92}
+                            height={50}
+                            className="knowledge-article__image"
+                          />
 
-                        <span className="knowledge-article__content">
-                          <strong>{article.title}</strong>
-                          <small>{article.date}</small>
-                        </span>
-                      </Link>
-                    );
-                  })}
+                          <span className="knowledge-article__content">
+                            <strong>{article.title}</strong>
+
+                            {article.publishedAt ? (
+                              <small>
+                                {formatArticleDate(
+                                  article.publishedAt
+                                )}
+                              </small>
+                            ) : null}
+                          </span>
+                        </Link>
+                      );
+                    })
+                  ) : (
+                    <p className="knowledge-card__empty">
+                      No articles published yet.
+                    </p>
+                  )}
                 </div>
               </article>
             );
