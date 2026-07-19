@@ -1,18 +1,24 @@
-"use client";
-
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
+import { presentationTool } from "sanity/presentation";
+
 import { schemaTypes } from "./sanity/schemaTypes";
 
 export default defineConfig({
   name: "default",
   title: "SharonMaiHR",
-  basePath: "/studio",
 
-  projectId: "q0csrb8z",
+  projectId: "k69msobs",
   dataset: "production",
 
-  plugins: [structureTool()],
+  plugins: [
+    structureTool(),
+    presentationTool({
+      previewUrl: {
+        initial: "/",
+      },
+    }),
+  ],
 
   schema: {
     types: schemaTypes,

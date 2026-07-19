@@ -1,236 +1,138 @@
-.article-page {
-  min-height: 70vh;
-  padding: 46px 0 76px;
-  background:
-    linear-gradient(180deg, #f7faff 0, #ffffff 270px);
-}
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-.article-page__container {
-  width: min(calc(100% - 48px), 920px);
-}
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import { getArticleBySlug } from "@/data/articles";
+import { categories } from "@/data/categories";
 
-.article-page__breadcrumb {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-bottom: 30px;
-  color: #5c6f8a;
-  font-size: 13px;
-  line-height: 1.5;
-}
+import "./article.css";
 
-.article-page__breadcrumb a {
-  color: #315983;
-  text-decoration: none;
-}
+type ArticlePageProps = {
+  params: Promise<{
+    category: string;
+    slug: string;
+  }>;
+};
 
-.article-page__breadcrumb a:hover {
-  color: #1157d5;
-  text-decoration: underline;
-}
+export default async function ArticlePage({
+  params,
+}: ArticlePageProps) {
+  const { category: categorySlug, slug } = await params;
 
-.article-page__header {
-  max-width: 780px;
-  margin: 0 auto 32px;
-}
+  const category = categories.find(
+    (item) => item.slug === categorySlug
+  );
 
-.article-page__category {
-  margin: 0 0 13px;
-  color: #1157d5;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
+  const article = getArticleBySlug(slug);
 
-.article-page__header h1 {
-  max-width: 780px;
-  margin: 0;
-  color: #082d67;
-  font-size: clamp(38px, 5vw, 60px);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -2.2px;
-}
-
-.article-page__date {
-  display: block;
-  margin-top: 18px;
-  color: #687b96;
-  font-size: 14px;
-}
-
-.article-page__image {
-  display: block;
-  width: 100%;
-  max-width: 780px;
-  height: auto;
-  max-height: 440px;
-  margin: 0 auto;
-  border-radius: 12px;
-  box-shadow: 0 16px 40px rgba(10, 45, 91, 0.1);
-  object-fit: cover;
-}
-
-.article-page__content {
-  max-width: 780px;
-  margin: 38px auto 0;
-  color: #263e61;
-  font-size: 17px;
-  line-height: 1.85;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.article-page__content p {
-  margin: 0 0 22px;
-}
-
-.article-page__lead {
-  margin-bottom: 32px !important;
-  padding-left: 22px;
-  border-left: 4px solid #1157d5;
-  color: #173e70;
-  font-size: 21px;
-  font-weight: 600;
-  line-height: 1.65;
-}
-
-.article-page__content h2 {
-  margin: 42px 0 16px;
-  color: #082d67;
-  font-size: 27px;
-  font-weight: 800;
-  line-height: 1.3;
-  letter-spacing: -0.6px;
-}
-
-.article-page__bottom {
-  max-width: 780px;
-  margin: 40px auto 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.article-page__back-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  margin: 0;
-  padding: 10px 18px;
-  border: 1px solid #cbd9eb;
-  border-radius: 6px;
-  background: #ffffff;
-  color: #0c4ba8;
-  font-size: 14px;
-  font-weight: 750;
-  text-decoration: none;
-  transition:
-    border-color 160ms ease,
-    background 160ms ease,
-    transform 160ms ease;
-}
-
-.article-page__back-link:hover {
-  border-color: #93b3df;
-  background: #f4f8fe;
-  transform: translateY(-1px);
-}
-
-.article-page__views-footer {
-  margin-left: auto;
-  color: #5f7088;
-  font-size: 15px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-@media (max-width: 760px) {
-  .article-page {
-    padding: 30px 0 54px;
+  if (!category) {
+    notFound();
   }
 
-  .article-page__container {
-    width: 100%;
-    padding-inline: 18px;
+  if (!article || article.category !== categorySlug) {
+    notFound();
   }
 
-  .article-page__breadcrumb {
-    margin-bottom: 22px;
-    font-size: 12px;
-  }
+  return (
+    <>
+      <Header />
 
-  .article-page__header {
-    max-width: 100%;
-    margin-bottom: 24px;
-  }
+      <main className="article-page">
+        <article className="site-container article-page__container">
+          <nav
+            className="article-page__breadcrumb"
+            aria-label="Breadcrumb"
+          >
+            <Link href="/">Home</Link>
 
-  .article-page__category {
-    font-size: 12px;
-  }
+            <span aria-hidden="true">/</span>
 
-  .article-page__header h1 {
-    max-width: 100%;
-    font-size: clamp(34px, 10vw, 46px);
-    line-height: 1.1;
-    letter-spacing: -1.5px;
-  }
+            <Link href={`/${category.slug}`}>
+              {category.title}
+            </Link>
 
-  .article-page__date {
-    margin-top: 14px;
-  }
+            <span aria-hidden="true">/</span>
 
-  .article-page__image {
-    max-width: 100%;
-    max-height: none;
-    border-radius: 8px;
-  }
+            <span>{article.title}</span>
+          </nav>
 
-  .article-page__content {
-    margin-top: 28px;
-    font-size: 16px;
-    line-height: 1.75;
-  }
+          <header className="article-page__header">
+            <p className="article-page__category">
+              {category.title}
+            </p>
 
-  .article-page__lead {
-    padding-left: 16px;
-    font-size: 18px;
-  }
+            <h1>{article.title}</h1>
 
-  .article-page__content h2 {
-    margin-top: 34px;
-    font-size: 23px;
-  }
+            {article.date ? (
+              <time className="article-page__date">
+                {article.date}
+              </time>
+            ) : null}
+          </header>
 
-  .article-page__bottom {
-    max-width: 100%;
-    margin-top: 32px;
-    gap: 12px;
-  }
+          <Image
+            src={article.image}
+            alt={article.title}
+            width={1200}
+            height={675}
+            priority
+            draggable={false}
+            className="article-page__image"
+          />
 
-  .article-page__back-link {
-    padding: 9px 13px;
-    font-size: 13px;
-  }
+          <div className="article-page__content">
+            <p className="article-page__lead">
+              {article.excerpt}
+            </p>
 
-  .article-page__views-footer {
-    font-size: 13px;
-  }
-}
+            {article.content && article.content.length > 0 ? (
+              article.content.map((paragraph, index) => {
+                const trimmedParagraph = paragraph.trim();
 
-@media (max-width: 480px) {
-  .article-page__bottom {
-    align-items: flex-start;
-  }
+                const isHeading =
+                  trimmedParagraph.toLowerCase() === "conclusion" ||
+                  /^\d+\.\s+/.test(trimmedParagraph);
 
-  .article-page__back-link {
-    max-width: 68%;
-  }
+                if (isHeading) {
+                  return (
+                    <h2 key={`${article.slug}-heading-${index}`}>
+                      {trimmedParagraph}
+                    </h2>
+                  );
+                }
 
-  .article-page__views-footer {
-    padding-top: 12px;
-  }
+                return (
+                  <p key={`${article.slug}-paragraph-${index}`}>
+                    {trimmedParagraph}
+                  </p>
+                );
+              })
+            ) : (
+              <p>
+                The full content of this article is being updated.
+              </p>
+            )}
+          </div>
+
+          <div className="article-page__bottom">
+            <Link
+              href={`/${category.slug}`}
+              className="article-page__back-link"
+            >
+              ← Back to {category.title}
+            </Link>
+
+            <div className="article-page__views-footer">
+              <span aria-hidden="true">◉</span>{" "}
+              {article.views.toLocaleString("en-US")} views
+            </div>
+          </div>
+        </article>
+      </main>
+
+      <Footer />
+    </>
+  );
 }
