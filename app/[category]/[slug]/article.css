@@ -1,138 +1,137 @@
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+.article-page {
+  background: #ffffff;
+}
 
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import { getArticleBySlug } from "@/data/articles";
-import { categories } from "@/data/categories";
+.article-page__container {
+  width: min(100% - 40px, 960px);
+  margin: 0 auto;
+  padding: 56px 0 80px;
+}
 
-import "./article.css";
+.article-page__breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+  color: #64748b;
+  font-size: 14px;
+}
 
-type ArticlePageProps = {
-  params: Promise<{
-    category: string;
-    slug: string;
-  }>;
-};
+.article-page__breadcrumb a {
+  color: #0b2d6b;
+  text-decoration: none;
+}
 
-export default async function ArticlePage({
-  params,
-}: ArticlePageProps) {
-  const { category: categorySlug, slug } = await params;
+.article-page__breadcrumb a:hover {
+  text-decoration: underline;
+}
 
-  const category = categories.find(
-    (item) => item.slug === categorySlug
-  );
+.article-page__header {
+  max-width: 820px;
+  margin-bottom: 36px;
+}
 
-  const article = getArticleBySlug(slug);
+.article-page__category {
+  margin: 0 0 14px;
+  color: #d98700;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
-  if (!category) {
-    notFound();
+.article-page__header h1 {
+  margin: 0;
+  color: #08265f;
+  font-size: clamp(40px, 6vw, 68px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.article-page__date {
+  display: block;
+  margin-top: 18px;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.article-page__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 42px 0 48px;
+  border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(8, 38, 95, 0.12);
+}
+
+.article-page__content {
+  max-width: 780px;
+  color: #24324a;
+  font-size: 19px;
+  line-height: 1.85;
+}
+
+.article-page__lead {
+  color: #42526b;
+  font-size: 21px;
+  line-height: 1.7;
+}
+
+.article-page__content h2 {
+  margin: 52px 0 18px;
+  color: #08265f;
+  font-size: 34px;
+  line-height: 1.25;
+}
+
+.article-page__content p {
+  margin: 0 0 22px;
+}
+
+.article-page__bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.article-page__back-link {
+  color: #0b2d6b;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.article-page__back-link:hover {
+  text-decoration: underline;
+}
+
+.article-page__views-footer {
+  color: #64748b;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .article-page__container {
+    width: min(100% - 28px, 960px);
+    padding: 36px 0 56px;
   }
 
-  if (!article || article.category !== categorySlug) {
-    notFound();
+  .article-page__header h1 {
+    font-size: 40px;
   }
 
-  return (
-    <>
-      <Header />
+  .article-page__content {
+    font-size: 17px;
+  }
 
-      <main className="article-page">
-        <article className="site-container article-page__container">
-          <nav
-            className="article-page__breadcrumb"
-            aria-label="Breadcrumb"
-          >
-            <Link href="/">Home</Link>
+  .article-page__content h2 {
+    font-size: 28px;
+  }
 
-            <span aria-hidden="true">/</span>
-
-            <Link href={`/${category.slug}`}>
-              {category.title}
-            </Link>
-
-            <span aria-hidden="true">/</span>
-
-            <span>{article.title}</span>
-          </nav>
-
-          <header className="article-page__header">
-            <p className="article-page__category">
-              {category.title}
-            </p>
-
-            <h1>{article.title}</h1>
-
-            {article.date ? (
-              <time className="article-page__date">
-                {article.date}
-              </time>
-            ) : null}
-          </header>
-
-          <Image
-            src={article.image}
-            alt={article.title}
-            width={1200}
-            height={675}
-            priority
-            draggable={false}
-            className="article-page__image"
-          />
-
-          <div className="article-page__content">
-            <p className="article-page__lead">
-              {article.excerpt}
-            </p>
-
-            {article.content && article.content.length > 0 ? (
-              article.content.map((paragraph, index) => {
-                const trimmedParagraph = paragraph.trim();
-
-                const isHeading =
-                  trimmedParagraph.toLowerCase() === "conclusion" ||
-                  /^\d+\.\s+/.test(trimmedParagraph);
-
-                if (isHeading) {
-                  return (
-                    <h2 key={`${article.slug}-heading-${index}`}>
-                      {trimmedParagraph}
-                    </h2>
-                  );
-                }
-
-                return (
-                  <p key={`${article.slug}-paragraph-${index}`}>
-                    {trimmedParagraph}
-                  </p>
-                );
-              })
-            ) : (
-              <p>
-                The full content of this article is being updated.
-              </p>
-            )}
-          </div>
-
-          <div className="article-page__bottom">
-            <Link
-              href={`/${category.slug}`}
-              className="article-page__back-link"
-            >
-              ← Back to {category.title}
-            </Link>
-
-            <div className="article-page__views-footer">
-              <span aria-hidden="true">◉</span>{" "}
-              {article.views.toLocaleString("en-US")} views
-            </div>
-          </div>
-        </article>
-      </main>
-
-      <Footer />
-    </>
-  );
+  .article-page__bottom {
+    flex-direction: column;
+  }
 }

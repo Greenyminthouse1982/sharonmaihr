@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { categories } from "@/data/categories";
